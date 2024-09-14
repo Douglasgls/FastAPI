@@ -1,0 +1,10 @@
+# Projeto FastAPI
+
+Este é um projeto robusto utilizando FastAPI, um framework moderno e de alto desempenho para a construção de APIs com Python 3.7+.
+
+## Objetivos do Projeto
+
+- Criar uma API rápida e eficiente
+- Demonstrar a utilização de FastAPI
+- Implementar endpoints básicos para operações CRUD
+
