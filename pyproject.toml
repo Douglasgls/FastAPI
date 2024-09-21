@@ -9,6 +9,10 @@ readme = "README.md"
 python = "3.12.*"
 ice = "^0.0.2"
 fastapi = {extras = ["standard"], version = "^0.114.2"}
+sqlalchemy = "^2.0.35"
+pydantic-settings = "^2.5.2"
+alembic = "^1.13.2"
+faker = "^29.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -40,7 +44,8 @@ addopts = '-p no:warnings'
 [tool.taskipy.tasks]
 lint = 'ruff check .; ruff check . --diff'
 format = 'ruff check . --fix'
-run = 'fastapi dev fast_zero/app.py'
+run = 'fastapi dev fast_zero/app.py --host 0.0.0.0 '
 pre_test = 'task lint'
 test = 'pytest -s -x --cov=fast_zero -vv'
 post_test = 'coverage html'
+
