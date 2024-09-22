@@ -7,6 +7,7 @@ from sqlalchemy.pool import StaticPool
 from fast_zero.app import app
 from fast_zero.database import get_session
 from fast_zero.models import User, table_registry
+from fast_zero.security import get_password_hash
 
 
 @pytest.fixture
@@ -40,14 +41,29 @@ def session():
 
 @pytest.fixture
 def create_fake_user(session):
+    pwd = '12345'
     user = User(
         username='Teste',
         email='teste@gmail.com',
-        password='123345'
+        password=get_password_hash(pwd)
     )
 
     session.add(user)
     session.commit()
     session.refresh(user)
 
+    user.clean_password = pwd  # Monkey patch
     return user
+
+
+@pytest.fixture
+def token(client, create_fake_user):
+    response = client.post(
+        '/token',
+        data={
+            'username': create_fake_user.email,
+            'password': create_fake_user.clean_password
+        }
+    )
+    response_json = response.json()
+    return response_json['access_token']
