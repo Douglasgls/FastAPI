@@ -27,33 +27,28 @@ def test_creat_user(client):
         }
 
 
-def test_read_users(client):
-    response = client.get(
-        '/users',
-    )
-
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == {'users': []}
-
-
-def test_read_with_user(client, create_fake_user):
+def test_read_user(client, create_fake_user, token):
     user_schema = UserPublic.model_validate(create_fake_user).model_dump()
     response = client.get(
         '/users/',
+        headers={'Authorization': f'Bearer {token}'},
     )
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {'users': [user_schema]}
 
 
-def test_update_user(client, create_fake_user):
+def test_update_user(client, create_fake_user, token):
     response = client.put(
-        '/users/1',
+        f'/users/{create_fake_user.id}',
+        headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'Testeatualizado',
             'email': 'Testeatualizado@gmail.com',
             'password': '123456'
         }
     )
+
+    print(response.json())
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
@@ -63,8 +58,22 @@ def test_update_user(client, create_fake_user):
         }
 
 
-def test_delete_user(client, create_fake_user):
+def test_delete_user(client, create_fake_user, token):
+
     response = client.delete(
-        '/users/1'
+        f'/users/{create_fake_user.id}',
+        headers={'Authorization': f'Bearer {token}'},
     )
+    assert response.status_code == HTTPStatus.OK
+
+
+def test_get_token(client, create_fake_user):
+    response = client.post(
+        '/token',
+        data={
+            'username': create_fake_user.email,
+            'password': create_fake_user.clean_password
+        }
+    )
+
     assert response.status_code == HTTPStatus.OK
