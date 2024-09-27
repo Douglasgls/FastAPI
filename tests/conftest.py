@@ -1,3 +1,5 @@
+import factory
+import factory.fuzzy
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -6,8 +8,27 @@ from sqlalchemy.pool import StaticPool
 
 from fast_zero.app import app
 from fast_zero.database import get_session
-from fast_zero.models import User, table_registry
+from fast_zero.models import Todos, TodoState, User, table_registry
 from fast_zero.security import get_password_hash
+
+
+class UserFactory(factory.Factory):
+    class Meta:  # Quem sera construido ?
+        model = User
+
+    username = factory.sequence(lambda n=1: f"teste{n}")
+    email = factory.lazy_attribute(lambda obj: f'{obj.username}@test.com')
+    password = factory.lazy_attribute(lambda obj: f'{obj.username}+senha')
+
+
+class TodoFactory(factory.Factory):
+    class Meta:
+        model = Todos
+
+    title = factory.Faker('text')
+    description = factory.Faker('text')
+    state = factory.fuzzy.FuzzyChoice(TodoState)
+    user_id = 1
 
 
 @pytest.fixture
@@ -42,12 +63,9 @@ def session():
 @pytest.fixture
 def create_fake_user(session):
     pwd = '12345'
-    user = User(
-        username='Teste',
-        email='teste@gmail.com',
+    user = UserFactory(
         password=get_password_hash(pwd)
     )
-
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -57,9 +75,22 @@ def create_fake_user(session):
 
 
 @pytest.fixture
+def create_fake_other_user(session):
+    pwd = '12345'
+    user = UserFactory(
+        password=get_password_hash(pwd)
+    )
+
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
+
+
+@pytest.fixture
 def token(client, create_fake_user):
     response = client.post(
-        '/token',
+        'auth/token',
         data={
             'username': create_fake_user.email,
             'password': create_fake_user.clean_password
