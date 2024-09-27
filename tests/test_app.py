@@ -48,8 +48,6 @@ def test_update_user(client, create_fake_user, token):
         }
     )
 
-    print(response.json())
-
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
         'id': 1,
@@ -67,13 +65,18 @@ def test_delete_user(client, create_fake_user, token):
     assert response.status_code == HTTPStatus.OK
 
 
-def test_get_token(client, create_fake_user):
-    response = client.post(
-        '/token',
-        data={
-            'username': create_fake_user.email,
-            'password': create_fake_user.clean_password
-        }
+def test_update_user_with_wrong_user(client, create_fake_other_user, token):
+    response = client.put(
+        f'/users/{create_fake_other_user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': 'bob',
+            'email': 'bob@example.com',
+            'password': 'mynewpassword',
+        },
     )
-
-    assert response.status_code == HTTPStatus.OK
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {
+        'detail':
+        'Esse usuário não tem permissão para alterar outro'
+        }
