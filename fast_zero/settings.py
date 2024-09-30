@@ -4,7 +4,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     # Ler o arquivo env
     model_config = SettingsConfigDict(
-        env_file='.env', env_file_encoding='utf-8', extra='ignore'
+        env_file='.env', env_file_encoding='utf-8', extra='ignore',
+        coerce_numbers_to_str=True
     )
 
     DATABASE_URL: str
