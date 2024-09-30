@@ -25,6 +25,9 @@ jobs:
       - name: Instalar dependêcias
         run: poetry install 
 
+      - name: Debug Database URL
+        run: echo "DATABASE_URL is $DATABASE_URL"
+
       - name: executar test
         run: poetry run task test
 
