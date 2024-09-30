@@ -20,5 +20,5 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: task test
+        run: poetry run task test
 
