@@ -4,7 +4,6 @@ on: [push, pull_request] # ação
 jobs: 
   test:
     runs-on: ubuntu-latest
-
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -16,8 +15,10 @@ jobs:
       - name: Install Poetry
         run: pip install poetry
 
+
       - name: Install dependencies
         run: poetry install
 
       - name: Run tests
         run: task test
+
