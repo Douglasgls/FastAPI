@@ -13,4 +13,11 @@ jobs:
         with:
           python-version: '3.11' 
 
+      - name: Install Poetry
+        run: pipx install poetry
 
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: task test
