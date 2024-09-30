@@ -28,6 +28,9 @@ jobs:
       - name: Debug Database URL
         run: echo "DATABASE_URL is $DATABASE_URL"
 
+      - name: List all environment variables
+        run: printenv
+
       - name: executar test
         run: poetry run task test
 
