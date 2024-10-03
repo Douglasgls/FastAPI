@@ -10,14 +10,15 @@ jobs:
       - name: Instalar python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11' 
-
+          python-version: '3.11'
+          
       - name: Instalar poetry
         run: pipx install poetry
+        
       - name: Instalar dependêcias
         run: poetry install 
 
-      - name: executar test
+      - name: executar tes
         run: poetry run task test
 
 
