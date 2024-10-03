@@ -66,7 +66,11 @@ def test_list_todos_filter_title_should_return_5_todos(
 ):
     expected_todos = 5
     session.bulk_save_objects(
-        TodoFactory.create_batch(5, user_id=create_fake_user.id, title='Test todo 1')
+        TodoFactory.create_batch(
+        5,
+        user_id=create_fake_user.id,
+        title='Test todo 1'
+        )
     )
     session.commit()
 

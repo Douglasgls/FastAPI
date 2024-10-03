@@ -19,7 +19,9 @@ router = APIRouter(
     tags=['auth']
 )
 
-T_Session = Annotated[Session, Depends(get_session)]  # Motivo do T_ é  devido a conveção python veja sobre: https://peps.python.org/pep-0008/#type-variable-names
+T_Session = Annotated[Session, Depends(get_session)]
+# Motivo do T_ é  devido a conveção python veja sobre:
+# https://peps.python.org/pep-0008/#type-variable-names
 
 
 @router.post('/token', response_model=Token)
